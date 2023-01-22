@@ -12,7 +12,8 @@ export const bookmarkReducer = (state = initialState, action) => {
         case ADD_BOOKMARK:
             return {
                 ...state,
-                bookmarks: [...state.bookmarks, action.payload]
+                bookmarks: [...state.bookmarks, action.payload],
+                loading: false
             };
 
         case READ_BOOKMARK:
@@ -21,13 +22,15 @@ export const bookmarkReducer = (state = initialState, action) => {
         case UPDATE_BOOKMARK:
             return {
                 ...state,
-                bookmarks: [...state.bookmarks.map(bookmark => bookmark.id !== action.payload.id ? bookmark : { ...action.payload })]
+                bookmarks: [...state.bookmarks.map(bookmark => bookmark.id !== action.payload.id ? bookmark : { ...action.payload })],
+                loading: false
             };
 
         case REMOVE_BOOKMARK:
             return {
                 ...state,
-                bookmarks: [...state.bookmarks.filter(bookmark => bookmark.id !== action.payload.id)]
+                bookmarks: [...state.bookmarks.filter(bookmark => bookmark.id !== action.payload.id)],
+                loading: false
             }
         
         case UPDATE_LOADING:

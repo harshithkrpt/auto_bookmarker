@@ -8,14 +8,12 @@ export const addBookmark = (payload) => {
     }
 }
 
-
 export const removeBookmark = (payload) => {
     return {
         type: REMOVE_BOOKMARK,
         payload
     }
 }
-
 
 export const updateBookmark = (payload) => {
     return {
@@ -66,14 +64,12 @@ export const fetchBookMarks = () => async (dispatch) => {
     }
 }
 
-
 export const addBookmarkThunk = (payload) => async (dispatch) => {
     try {
-        await axios.post('http://localhost:4000/api/addbookmark', {
+        const { data : {  id }} = await axios.post('http://localhost:4000/api/addbookmark', {
             currentBookmarkValue : payload.currentBookmarkValue
         })
-        dispatch(fetchBookMarks());
-        
+        dispatch(addBookmark({id , currentBookmarkValue: payload.currentBookmarkValue}));
     }
     catch (err) {
         dispatch(fetchDataFailure(err.message));
@@ -85,13 +81,12 @@ export const deleteBookmarkThunk = (payload) => async (dispatch) => {
         await axios.post('http://localhost:4000/api/deletebookmark',{
             id : payload.id
         });
-        dispatch(fetchBookMarks());
+        dispatch(removeBookmark(payload));
     }
     catch(err) {
         dispatch(fetchDataFailure(err.message));
     }
 }
-
 
 export const updateBookmarkThunk = (payload) => async (dispatch) => {
     try {
@@ -99,7 +94,7 @@ export const updateBookmarkThunk = (payload) => async (dispatch) => {
             id : payload.id,
             currentBookmarkValue : payload.currentBookmarkValue
         });
-        dispatch(fetchBookMarks());
+        dispatch(updateBookmark(payload));
     }
     catch(err) {
         dispatch(fetchDataFailure(err.message));
