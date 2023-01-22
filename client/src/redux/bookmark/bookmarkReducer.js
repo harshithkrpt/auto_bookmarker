@@ -1,7 +1,7 @@
-import { ADD_BOOKMARK, READ_BOOKMARK, REMOVE_BOOKMARK, UPDATE_BOOKMARK } from './bookmarkTypes';
+import { ADD_BOOKMARK, FETCH_DATA_FAILURE, FETCH_DATA_SUCCESS, READ_BOOKMARK, REMOVE_BOOKMARK, UPDATE_BOOKMARK, UPDATE_LOADING } from './bookmarkTypes';
 
 const initialState = {
-    loading: true,
+    loading: false,
     bookmarks: [],
     error: ''
 }
@@ -29,7 +29,27 @@ export const bookmarkReducer = (state = initialState, action) => {
                 ...state,
                 bookmarks: [...state.bookmarks.filter(bookmark => bookmark.id !== action.payload.id)]
             }
+        
+        case UPDATE_LOADING:
+            return {
+                ...state,
+                loading: true
+            }
 
+        case FETCH_DATA_SUCCESS:
+            return {
+                ...state,
+                bookmarks: [...action.payload],
+                loading: false
+            }
+        
+        case FETCH_DATA_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+            
         default:
             return state;
     }
