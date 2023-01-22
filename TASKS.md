@@ -1,0 +1,6 @@
+- Popup to Manually Bookmark an Website - Extension
+- Suggest to Automatically Bookmark an Website - Under a Specific Folder
+- When Watching youtube video 
+    - if user clicks on Watch Later 
+    - if user closes the window when video is playing we should ask the user to save it
+- Send a Notification to users to read from Bookmarks list
