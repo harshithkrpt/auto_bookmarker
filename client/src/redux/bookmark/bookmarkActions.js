@@ -1,4 +1,4 @@
-import { ADD_BOOKMARK, READ_BOOKMARK, REMOVE_BOOKMARK, UPDATE_BOOKMARK,UPDATE_LOADING, FETCH_DATA_FAILURE,FETCH_DATA_SUCCESS } from './bookmarkTypes';
+import { ADD_BOOKMARK, READ_BOOKMARK, REMOVE_BOOKMARK, UPDATE_BOOKMARK, UPDATE_LOADING, FETCH_DATA_FAILURE, FETCH_DATA_SUCCESS } from './bookmarkTypes';
 import axios from 'axios';
 
 export const addBookmark = (payload) => {
@@ -28,7 +28,7 @@ export const readBookmark = (payload) => {
     return {
         type: READ_BOOKMARK,
         payload
-    }   
+    }
 }
 
 export const fetchLoading = () => {
@@ -54,12 +54,52 @@ export const fetchDataFailure = (payload) => {
 export const fetchBookMarks = () => async (dispatch) => {
     dispatch(fetchLoading());
     try {
-        const response = await axios.get('https://fakerapi.it/api/v1/books?_quantity=10');
+        const response = await axios.get('http://localhost:4000/api/getbookmarks');
         let booksmarks = [];
         response.data.data.forEach(item => {
-            booksmarks.push({id: item.isbn, currentBookmarkValue: item.image})
+            booksmarks.push({ id: item._id, currentBookmarkValue: item.currentBookmarkValue })
         });
         dispatch(fetchDataSuccess(booksmarks));
+    }
+    catch (err) {
+        dispatch(fetchDataFailure(err.message));
+    }
+}
+
+
+export const addBookmarkThunk = (payload) => async (dispatch) => {
+    try {
+        await axios.post('http://localhost:4000/api/addbookmark', {
+            currentBookmarkValue : payload.currentBookmarkValue
+        })
+        dispatch(fetchBookMarks());
+        
+    }
+    catch (err) {
+        dispatch(fetchDataFailure(err.message));
+    }
+}
+
+export const deleteBookmarkThunk = (payload) => async (dispatch) => {
+    try {
+        await axios.post('http://localhost:4000/api/deletebookmark',{
+            id : payload.id
+        });
+        dispatch(fetchBookMarks());
+    }
+    catch(err) {
+        dispatch(fetchDataFailure(err.message));
+    }
+}
+
+
+export const updateBookmarkThunk = (payload) => async (dispatch) => {
+    try {
+        await axios.post('http://localhost:4000/api/updatebookmark',{
+            id : payload.id,
+            currentBookmarkValue : payload.currentBookmarkValue
+        });
+        dispatch(fetchBookMarks());
     }
     catch(err) {
         dispatch(fetchDataFailure(err.message));

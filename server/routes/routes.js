@@ -56,7 +56,7 @@ router.post('/updatebookmark',async (req,res) => {
 })
 
 // Delete Data
-router.delete('/deletebookmark',async (req,res) => {
+router.post('/deletebookmark',async (req,res) => {
     try {
         const { id } = req.body;
 

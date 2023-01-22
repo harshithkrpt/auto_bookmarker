@@ -1,4 +1,4 @@
-import { addBookmark, readBookmark, removeBookmark, updateBookmark, fetchBookMarks } from './redux/bookmark/bookmarkActions'
+import { addBookmarkThunk, readBookmark, deleteBookmarkThunk , updateBookmarkThunk, fetchBookMarks } from './redux/bookmark/bookmarkActions'
 import { connect } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,6 @@ function App(props) {
 
 
   useEffect(() => {
-    // console.log("HELLO")
     fetchBookMarks()
   },[fetchBookMarks]);
 
@@ -106,13 +105,13 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(readBookmark());
     },
     addBookmark: (payload) => {
-      dispatch(addBookmark(payload))
+      dispatch(addBookmarkThunk(payload))
     },
     removeBookmark: (payload) => {
-      dispatch(removeBookmark(payload))
+      dispatch(deleteBookmarkThunk(payload))
     },
     updateBookmark: (payload) => {
-      dispatch(updateBookmark(payload))
+      dispatch(updateBookmarkThunk(payload))
     },
     fetchBookMarks: () => {
       dispatch(fetchBookMarks());
