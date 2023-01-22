@@ -13,9 +13,10 @@ router.post('/addbookmark',async (req,res) => {
     const bookmark = new Bookmark({currentBookmarkValue: req.body.currentBookmarkValue })
 
     try {
-        await bookmark.save();
+        let data = await bookmark.save();
         res.status(200).send({
-            msg: "Success"
+            msg: "Success",
+            id: data._id
         });
     }
     catch(err) {

@@ -1,6 +1,5 @@
 import { addBookmarkThunk, readBookmark, deleteBookmarkThunk , updateBookmarkThunk, fetchBookMarks } from './redux/bookmark/bookmarkActions'
 import { connect } from 'react-redux';
-import { v4 as uuid } from 'uuid';
 import { useEffect, useState } from 'react';
 import { isValidUrl } from './utils/validators';
 import Delete from './components/svgs/Delete';
@@ -8,55 +7,52 @@ import Edit from './components/svgs/Edit';
 
 function App(props) {
 
-  const { fetchBookMarks } = props;
+  const { fetchBookMarks,addBookmark,removeBookmark,updateBookmark, bookmarks} = props;
 
-  const [bookmarkData, setBookmarkData] = useState({ id: '', currentBookmarkValue: '' });
+  // BookMark Data
+  const [bookmarkData, setBookmarkData] = useState({ currentBookmarkValue: '' });
+  // Input Adding / Updating Flag
   const [addInput, setAddInput] = useState({ isAdd: true });
 
-
+  // Will run once to fetch the data
   useEffect(() => {
     fetchBookMarks()
   },[fetchBookMarks]);
 
-
   const handleBookmarkInpChange = (e) => {
-    setBookmarkData({ currentBookmarkValue: e.target.value, id: bookmarkData.id ? bookmarkData.id : uuid() });
+    setBookmarkData({...bookmarkData, currentBookmarkValue: e.target.value });
   }
 
-  const handleAddBookmark = (e) => {
-    if (bookmarkData.currentBookmarkValue !== '' && isValidUrl(bookmarkData.currentBookmarkValue)) {
-      props.addBookmark(bookmarkData)
-      setBookmarkData({ id: '', currentBookmarkValue: '' });
+  const handleSubmitBookmark = () => {
+    if (isValidUrl(bookmarkData.currentBookmarkValue)) {
+      if(addInput.isAdd) {
+        addBookmark(bookmarkData);
+      }
+      else if(bookmarkData.id) {
+        updateBookmark(bookmarkData);
+        setAddInput({isAdd: true});
+      }
     }
+    else {
+      alert("Not a Valid URL");
+    }
+    setBookmarkData({ currentBookmarkValue: '' });
   }
 
   const handleDelete = (id) => {
     if (id !== '') {
-      props.removeBookmark({ id })
+      removeBookmark({ id })
     }
-  }
-
-  const handleUpdateBookmark = () => {
-    // Update the Redux store
-    if (bookmarkData.currentBookmarkValue !== '' && isValidUrl(bookmarkData.currentBookmarkValue)) {
-      props.updateBookmark(bookmarkData);
-    }
-    else {
-      alert("Not a Valid URL")
-    }
-    setAddInput({ isAdd: true });
-    setBookmarkData({ id: '', currentBookmarkValue: '' });
   }
 
   const handleUpdate = (bookmark) => {
-    setAddInput({ isAdd: false });
-    setBookmarkData({ id: bookmark.id, currentBookmarkValue: bookmark.currentBookmarkValue });
+    setAddInput({isAdd: false})
+    setBookmarkData({ currentBookmarkValue: bookmark.currentBookmarkValue, id: bookmark.id });
   }
 
- 
   return (
     <div className="App container">
-      <h1>BOOKMARK URLS</h1>
+      <h1 className='text-center'>BOOKMARKS</h1>
       <table className='table'>
         <thead>
           <tr>
@@ -68,7 +64,7 @@ function App(props) {
         </thead>
         <tbody>
           {
-            props.bookmarks.length !== 0 && props.bookmarks.map((bookmark, index) => {
+            bookmarks.length !== 0 && bookmarks.map((bookmark, index) => {
               return (
                 <tr key={bookmark.id}>
                   <th scope='row'>{index + 1}</th>
@@ -86,7 +82,7 @@ function App(props) {
       <div className="input-group mb-3">
         <input type="text" className="form-control" value={bookmarkData.currentBookmarkValue} onChange={handleBookmarkInpChange} placeholder="Enter Bookmark URL" aria-label="Enter Bookmark URL" aria-describedby="v" />
         <div className="input-group-append">
-          <span className="input-group-text" onClick={() => { addInput.isAdd ? handleAddBookmark() : handleUpdateBookmark() }} id="basic-addon2">{addInput.isAdd ? "Add" : "Update"}</span>
+          <span className="input-group-text" onClick={() => { handleSubmitBookmark() }} id="basic-addon2">{addInput.isAdd ? "Add" : "Update"}</span>
         </div>
       </div>
     </div>
