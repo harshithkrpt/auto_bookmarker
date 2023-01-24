@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { isValidUrl } from './utils/validators';
 import Delete from './components/svgs/Delete';
 import Edit from './components/svgs/Edit';
+import Tag from './components/tags/Tag';
 
 function App(props) {
 
@@ -85,6 +86,9 @@ function App(props) {
           <span className="input-group-text" onClick={() => { handleSubmitBookmark() }} id="basic-addon2">{addInput.isAdd ? "Add" : "Update"}</span>
         </div>
       </div>
+
+      <Tag />
+
     </div>
   );
 }
