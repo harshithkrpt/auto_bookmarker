@@ -7,3 +7,9 @@ export const isValidUrl = urlString=> {
   '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
 return !!urlPattern.test(urlString);
 }
+
+export const getColor = (index) => {
+  let arr = ['btn btn-primary','btn btn-secondary','btn btn-success','btn btn-danger','btn btn-warning','btn btn-info','btn btn-light','btn btn-dark']
+
+  return arr[index % 8 ]
+}
